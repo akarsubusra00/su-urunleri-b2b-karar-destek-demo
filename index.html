@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sentetik verilerle çalışan su ürünleri B2B sipariş karşılama ve sipariş-kapasite karar destek sistemi demo sürümü.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:title" content="Su Ürünleri B2B Karar Destek Sistemi • Demo">
+  <meta property="og:description" content="Sipariş, stok ve üretim kapasitesini sentetik verilerle birlikte değerlendiren çevrim içi tanıtım sürümü.">
+  <title>Su Ürünleri B2B Karar Destek Sistemi • Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="demo-banner"><strong>Tanıtım sürümü</strong><span>Bu uygulamadaki tüm üretim, kapasite, süre ve örnek sipariş değerleri sentetiktir.</span></div>
+  <header class="app-header">
+    <div class="brand">
+      <div>
+        <p>SU ÜRÜNLERİ • B2B KARAR DESTEK • DEMO</p>
+        <h1>Su Ürünleri B2B Sipariş Karşılama ve Sipariş-Kapasite Karar Destek Sistemi</h1>
+      </div>
+    </div>
+    <div class="header-actions" aria-label="Yardımcı işlemler">
+      <button class="utility-btn" data-drawer="guide" type="button">Uygulama Rehberi</button>
+      <button class="utility-btn" data-drawer="kpi-guide" type="button">KPI Sözlüğü</button>
+      <button class="utility-btn" data-drawer="terms" type="button">Terimler Sözlüğü</button>
+      <button class="utility-btn" data-drawer="rules" type="button">Kural Ayarları</button>
+      <button class="utility-btn" data-drawer="saved-orders" type="button">Kayıtlı Siparişler <span id="saved-orders-count" class="count-badge">0</span></button>
+      <button class="utility-btn" data-drawer="notes" type="button">Notlar <span id="notes-count" class="count-badge">0</span></button>
+      <button id="pdf-report" class="utility-btn report" type="button">Analiz Raporu Al</button>
+      <button id="excel-report" class="utility-btn report" type="button">Excel Raporu Al</button>
+    </div>
+  </header>
+
+  <nav class="section-nav" aria-label="Sayfa bölümleri">
+    <a href="#dashboard">Genel Görünüm</a>
+    <a href="#new-order">Yeni Sipariş</a>
+    <a href="#analysis">Analiz</a>
+    <a href="#optimization">Optimizasyon</a>
+    <a href="#results">Sonuçlar</a>
+    <a href="#capacity">Kapasite</a>
+    <a href="#methods">Yöntemler</a>
+  </nav>
+
+  <main class="page">
+    <section id="dashboard" class="welcome-strip">
+      <div>
+        <span class="status-dot"></span>
+        <p><strong>Sipariş, stok ve üretim kapasitesini birlikte değerlendirin.</strong> Karşılanma riskini ölçün, tahsis planını iyileştirin ve beklenen iade tutarını görün.</p>
+      </div>
+      <a class="primary-link" href="#new-order">+ Yeni Sipariş</a>
+    </section>
+
+    <section class="kpi-section" aria-labelledby="kpi-title">
+      <div class="section-title-row">
+        <div>
+          <p class="eyebrow">GENEL GÖRÜNÜM</p>
+          <h2 id="kpi-title">Temel göstergeler</h2>
+        </div>
+        <p id="kpi-context" class="context-note">Yeni sipariş analizi henüz çalıştırılmadı.</p>
+      </div>
+      <div class="kpi-grid">
+        <button class="kpi-card" data-kpi="demand" type="button"><span>Toplam sipariş</span><strong id="kpi-demand">—</strong><small>Talep edilen toplam miktar</small></button>
+        <button class="kpi-card" data-kpi="fulfilled" type="button"><span>Beklenen karşılama</span><strong id="kpi-fulfilled">—</strong><small>Optimizasyon sonrası</small></button>
+        <button class="kpi-card" data-kpi="full-lines" type="button"><span>Tam karşılanan kalem</span><strong id="kpi-full-lines">—</strong><small>%100 karşılanan satırlar</small></button>
+        <button class="kpi-card risk-card" data-kpi="risky-lines" type="button"><span>Riskli kalem</span><strong id="kpi-risky-lines">—</strong><small>Yüksek ve çok yüksek risk</small></button>
+        <button class="kpi-card" data-kpi="shortage" type="button"><span>Beklenen eksik miktar</span><strong id="kpi-shortage">—</strong><small>Optimizasyon sonrası</small></button>
+        <button class="kpi-card" data-kpi="refund" type="button"><span>Beklenen iade tutarı</span><strong id="kpi-refund">—</strong><small>Sipariş para birimlerinde</small></button>
+        <button class="kpi-card" data-kpi="capacity" type="button"><span>Normal kapasite kullanımı</span><strong id="kpi-capacity">—</strong><small>İki fiziksel hat</small></button>
+        <button class="kpi-card" data-kpi="flex" type="button"><span>İlave kapasite</span><strong id="kpi-flex">—</strong><small>Üst sınır %12</small></button>
+        <button class="kpi-card" data-kpi="line-count" type="button"><span>Sipariş kalemi</span><strong id="kpi-line-count">—</strong><small>Analize girilen satır sayısı</small></button>
+        <button class="kpi-card" data-kpi="net-revenue" type="button"><span>Beklenen net gelir</span><strong id="kpi-net-revenue">—</strong><small>Para birimi bazında</small></button>
+        <button class="kpi-card" data-kpi="stock-share" type="button"><span>Stok katkısı</span><strong id="kpi-stock-share">—</strong><small>Fiziksel stoktan karşılanan</small></button>
+        <button class="kpi-card" data-kpi="production-share" type="button"><span>Üretim katkısı</span><strong id="kpi-production-share">—</strong><small>Hat çıkışından karşılanan</small></button>
+        <button class="kpi-card" data-kpi="delayed-lines" type="button"><span>Tarih düzenleme önerisi</span><strong id="kpi-delayed-lines">—</strong><small>Esneklikten yararlanan kalem</small></button>
+        <button class="kpi-card" data-kpi="alternative-lines" type="button"><span>Alternatif kalibre önerisi</span><strong id="kpi-alternative-lines">—</strong><small>İzin verilen kalemler</small></button>
+      </div>
+    </section>
+
+    <section class="filter-panel" aria-labelledby="filter-title">
+      <button class="info-button top-right" data-info="filters" type="button" aria-label="Filtreleri açıkla">i</button>
+      <div class="filter-heading">
+        <div><p class="eyebrow">GÖRÜNÜM FİLTRELERİ</p><h2 id="filter-title">Sonuç görünümünü filtrele</h2></div>
+        <button id="clear-filters" class="text-button" type="button">Filtreleri temizle</button>
+      </div>
+      <div class="filter-grid">
+        <label>Tarih başlangıcı<input id="filter-start" type="date"></label>
+        <label>Tarih bitişi<input id="filter-end" type="date"></label>
+        <label>Müşteri<select id="filter-customer"><option value="">Tümü</option></select></label>
+        <label>Pazar<select id="filter-market"><option value="">Tümü</option><option>İç piyasa</option><option>İhracat</option></select></label>
+        <label>Ürün<select id="filter-product"><option value="">Tümü</option><option value="LEVREK">Levrek</option><option value="CIPURA">Çipura</option></select></label>
+        <label>Kalibre<select id="filter-calibre"><option value="">Tümü</option></select></label>
+        <label>Risk<select id="filter-risk"><option value="">Tümü</option><option>Düşük</option><option>Orta</option><option>Yüksek</option><option>Çok yüksek</option></select></label>
+        <label>Para birimi<select id="filter-currency"><option value="">Tümü</option><option>TRY</option><option>EUR</option><option>USD</option></select></label>
+      </div>
+      <p class="filter-note">Filtreler hesaplama sonucunu değiştirmez; yalnızca gösterilen sonuç kartlarını, tabloları ve grafikleri daraltır.</p>
+    </section>
+
+    <section id="new-order" class="panel input-panel">
+      <div class="panel-heading">
+        <div><p class="eyebrow">01 • YENİ SİPARİŞ</p><h2>Sipariş ve operasyon girdileri</h2><p>Birden fazla sipariş ve her sipariş için birden fazla ürün–kalibre kalemi ekleyebilirsiniz.</p></div>
+        <div class="heading-actions">
+          <a class="upload-button" href="Veri_Yukleme_Sablonu.xlsx" download>Dosya Şablonu</a>
+          <label class="upload-button">Dosyadan yükle<input id="orders-file" type="file" accept=".csv,.xlsx,.xls" hidden></label>
+          <button id="add-order-line" class="button secondary" type="button">+ Sipariş kalemi</button>
+          <button id="save-order" class="button primary" type="button">Siparişi Kaydet</button>
+          <button class="info-button" data-info="order-inputs" type="button" aria-label="Sipariş girdilerini açıkla">i</button>
+        </div>
+      </div>
+
+      <div class="general-fields">
+        <label>Analiz adı<input id="analysis-name" type="text" value="Yeni Sipariş Analizi"></label>
+        <label>Hesaplama tarihi<input id="analysis-date" type="date"></label>
+        <label>İlave kapasite üst sınırı (%)<input id="flex-limit" type="number" min="0" max="12" step="0.1" value="12"></label>
+      </div>
+
+      <div id="import-completion" class="import-completion" hidden>
+        <div>
+          <strong>Yükleme planındaki ortak bilgileri tamamlayın</strong>
+          <p>Ürün, kalibre, sipariş kilogramı ve bütün balık eşdeğeri dosyadan alınmıştır. Dosyada bulunmayan bilgiler aşağıdaki alanlardan tüm aktarılan satırlara uygulanır.</p>
+        </div>
+        <div class="import-completion-grid">
+          <label>Sipariş no<input id="import-order-id" value="YUKLEME-PLANI"></label>
+          <label>Müşteri<input id="import-customer" placeholder="Müşteri adı"></label>
+          <label>Pazar<select id="import-market"><option>İhracat</option><option>İç piyasa</option></select></label>
+          <label>Planlanan teslim tarihi<input id="import-planned" type="date"></label>
+          <label>Birim fiyat<input id="import-price" type="number" min="0" step="0.01" value="0"></label>
+          <label>Para birimi<select id="import-currency"><option>EUR</option><option>USD</option><option>TRY</option></select></label>
+        </div>
+        <button id="apply-import-metadata" class="button secondary" type="button">Bilgileri Aktarılan Satırlara Uygula</button>
+      </div>
+
+      <div class="table-block">
+        <div class="block-heading"><div><h3>Sipariş kalemleri</h3><p>Her satır bağımsız bir ürün–kalibre talebidir.</p></div><button class="info-button" data-info="orders" type="button" aria-label="Sipariş alanlarını açıkla">i</button></div>
+        <div class="table-wrap">
+          <table class="input-table orders-table">
+            <thead><tr><th>Sipariş / Kalem</th><th>Müşteri / Pazar</th><th>Ürün / Biçim / Kalibre</th><th>Miktar / Fiyat</th><th>Teslim tarihleri</th><th>Öncelik</th><th>Alternatif</th><th>Not</th><th></th></tr></thead>
+            <tbody id="order-lines"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-block">
+        <div class="block-heading">
+          <div><h3>Güncel stok partileri</h3><p>Serbest ve fiziksel olarak müşteriye ayrılmış stokları ayrı partiler hâlinde girin. Kayıt girilmezse stok 0 kg kabul edilir.</p></div>
+          <div class="heading-actions"><a class="upload-button small" href="Stok_Yukleme_Sablonu.xlsx" download>Stok Şablonu</a><label class="upload-button small">Dosyadan yükle<input id="stocks-file" type="file" accept=".csv,.xlsx,.xls" hidden></label><button id="add-stock-line" class="button tertiary" type="button">+ Stok partisi</button><button class="info-button" data-info="stocks" type="button" aria-label="Stok alanlarını açıkla">i</button></div>
+        </div>
+        <div class="table-wrap">
+          <table class="input-table">
+            <thead><tr><th>Parti / Tesis</th><th>Ürün / Kalibre</th><th>Miktar (kg)</th><th>Üretim–giriş tarihi</th><th>Durum</th><th>Ayrıldığı müşteri / sipariş</th><th></th></tr></thead>
+            <tbody id="stock-lines"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <details class="optional-input">
+        <summary><span>Üretim ve kapasite bilgileri</span><small>İsteğe bağlı</small></summary>
+        <div class="optional-content">
+          <div class="block-heading"><p>Bu alan boş bırakılırsa sentetik GMM, adaptif kernel ve Monte Carlo parametreleri kullanılır.</p><div class="heading-actions"><label class="upload-button small">Dosyadan yükle<input id="capacity-file" type="file" accept=".csv,.xlsx,.xls" hidden></label><button id="add-capacity-line" class="button tertiary" type="button">+ Üretim kaydı</button><button class="info-button" data-info="capacity-input" type="button" aria-label="Kapasite girdilerini açıkla">i</button></div></div>
+          <div class="table-wrap"><table class="input-table"><thead><tr><th>Tarih</th><th>Ürün / Kalibre</th><th>Beklenen üretim (kg)</th><th>Kullanılabilir hat</th><th>Vardiya</th><th>Bilinen duruş (dk)</th><th></th></tr></thead><tbody id="capacity-lines"></tbody></table></div>
+        </div>
+      </details>
+
+      <div class="assumption-banner">
+        <button class="info-button" data-info="model-basis" type="button" aria-label="Model varsayımlarını açıkla">i</button>
+        <div><strong>Sentetik operasyon temeli</strong><p>2 fiziksel hat, 2 vardiya ve vardiya başına 420 dakika. Pazar üretim yapılmaz; değerler tanıtım amaçlıdır.</p></div>
+        <button id="validate-data" class="button secondary" type="button">Verileri Kontrol Et</button>
+      </div>
+      <div id="validation-message" class="validation-message" aria-live="polite"></div>
+      <button id="run-analysis" class="button primary run-button" type="button"><span>Analizi ve Optimizasyonu Çalıştır</span><small>Ön risk → Optimizasyon → Son risk testi</small></button>
+    </section>
+
+    <section id="analysis" class="panel analysis-panel" aria-live="polite">
+      <div class="panel-heading compact"><div><p class="eyebrow">02 • ANALİZ AKIŞI</p><h2>Hesaplama ve optimizasyon takibi</h2><p id="analysis-status">Analiz başlatılmayı bekliyor.</p></div><span id="analysis-badge" class="status-badge idle">Bekliyor</span></div>
+      <div class="progress-track"><i id="overall-progress"></i></div>
+      <div class="process-steps" id="process-steps">
+        <article data-step="1"><span>1</span><div><strong>Veri kontrolü</strong><small>Sipariş, stok, tarih ve kalibre doğrulaması</small></div><b>Bekliyor</b></article>
+        <article data-step="2"><span>2</span><div><strong>Üretim tahmini</strong><small>Eksik kapasite bilgilerinin tamamlanması</small></div><b>Bekliyor</b></article>
+        <article data-step="3"><span>3</span><div><strong>Ön risk analizi</strong><small>Mevcut kurallarla karşılanma olasılıkları</small></div><b>Bekliyor</b></article>
+        <article id="optimization" data-step="4"><span>4</span><div><strong>Optimizasyon</strong><small>Doğrusal ağ modeliyle stok ve kapasite tahsisi</small></div><b>Bekliyor</b></article>
+        <article data-step="5"><span>5</span><div><strong>Son risk testi</strong><small>İyileştirilmiş planın belirsizlik altında sınanması</small></div><b>Bekliyor</b></article>
+        <article data-step="6"><span>6</span><div><strong>Raporlama</strong><small>KPI, karşılaştırma ve önerilerin hazırlanması</small></div><b>Bekliyor</b></article>
+      </div>
+      <div class="analysis-meta"><span id="meta-orders">0 sipariş</span><span id="meta-lines">0 kalem</span><span id="meta-stocks">0 stok partisi</span><span>1.000 risk benzetim koşusu</span><span id="elapsed-time">0,0 sn</span></div>
+    </section>
+
+    <section id="results" class="panel results-panel">
+      <div id="empty-results" class="empty-state"><div class="empty-icon">↗</div><h2>Sonuçlar analiz tamamlandığında burada gösterilecek</h2><p>Ön risk, optimizasyon sonrası risk, iade tutarı ve kapasite tahsisi birlikte karşılaştırılacaktır.</p></div>
+      <div id="results-content" hidden>
+        <div class="decision-banner" id="decision-banner"><div><p class="eyebrow">03 • KARAR ÖNERİSİ</p><h2 id="decision-title">—</h2><p id="decision-text">—</p></div><button id="decision-action" type="button">—</button></div>
+        <div id="decision-confirmation" class="decision-confirmation" hidden></div>
+
+        <div class="comparison-grid" id="comparison-grid"></div>
+
+        <div class="result-tabs" role="tablist" aria-label="Sonuç bölümleri">
+          <button class="active" data-tab="line-results" type="button">Sipariş Kalemleri</button>
+          <button data-tab="risk-source" type="button">Riskin Kaynağı</button>
+          <button data-tab="allocation" type="button">Kapasite ve Stok</button>
+          <button data-tab="forecast" type="button">Tahmin ve Monte Carlo</button>
+          <button data-tab="financial" type="button">Finansal Sonuçlar</button>
+        </div>
+
+        <div id="line-results" class="tab-panel active">
+          <div class="block-heading"><div><h3>Sipariş kalemi sonuçları</h3><p>Riskli kalemler öncelikli gösterilir.</p></div><button class="info-button" data-info="line-results" type="button" aria-label="Kalem sonuçlarını açıkla">i</button></div>
+          <div class="table-wrap"><table class="result-table"><thead><tr><th>Sipariş / Müşteri</th><th>Ürün–kalibre</th><th>Talep</th><th>Önce</th><th>Sonra</th><th>Tam olasılık</th><th>Eksik / İade</th><th>Risk</th><th>Öneri</th></tr></thead><tbody id="result-lines"></tbody></table></div>
+        </div>
+        <div id="risk-source" class="tab-panel"><div id="risk-content" class="insight-grid"></div></div>
+        <div id="allocation" class="tab-panel"><div id="allocation-content"></div></div>
+        <div id="forecast" class="tab-panel"><div id="forecast-content"></div></div>
+        <div id="financial" class="tab-panel"><div id="financial-content"></div></div>
+      </div>
+    </section>
+
+    <section id="capacity" class="panel">
+      <div class="panel-heading compact"><div><p class="eyebrow">04 • ÜRETİM ALTYAPISI</p><h2>Üretim, vardiya ve kalibre kapasitesi</h2><p>Sentetik tanıtım verilerinden oluşturulan model girdileri.</p></div><button class="info-button" data-info="production" type="button" aria-label="Üretim altyapısını açıkla">i</button></div>
+      <div class="operation-grid">
+        <article><span>Fiziksel hat</span><strong>2</strong><small>Sentetik tesis varsayımı</small></article>
+        <article><span>Vardiya / gün</span><strong>2</strong><small>420 dakika net üretim</small></article>
+        <article><span>Üretim günü</span><strong>6 gün</strong><small>Pazar üretim dışı</small></article>
+        <article><span>İlave kapasite sınırı</span><strong>%12</strong><small>Tanıtım varsayımı</small></article>
+        <article><span>Levrek raf ömrü</span><strong>3 gün</strong><small>Soğuk taze stok</small></article>
+        <article><span>Çipura raf ömrü</span><strong>2 gün</strong><small>Soğuk taze stok</small></article>
+      </div>
+      <div class="capacity-layout">
+        <article class="chart-card"><div class="block-heading"><div><h3>Demo aylık üretim</h3><p>Sentetik gerçekleşen ve tahmin değerleri</p></div><span>bin ton</span></div><div id="monthly-chart" class="monthly-chart"></div><div class="legend"><span><i class="actual-dot"></i>Demo gerçekleşen</span><span><i class="forecast-dot"></i>Demo tahmin</span></div></article>
+        <article class="chart-card"><div class="block-heading"><div><h3>Başlıca P50 kalibre çıktıları</h3><p>Sentetik medyan yıllık tahmin</p></div><span>ton</span></div><div id="calibre-chart" class="calibre-chart"></div></article>
+      </div>
+    </section>
+
+    <section id="methods" class="panel methods-panel">
+      <div class="panel-heading compact"><div><p class="eyebrow">05 • YÖNTEM VE DOĞRULAMA</p><h2>Analitik kanıt zinciri</h2><p>Teknik ayrıntılar ana karar ekranını kalabalıklaştırmadan burada açıklanır.</p></div><button class="info-button" data-info="methods" type="button" aria-label="Yöntemleri açıkla">i</button></div>
+      <div class="pipeline"><span>Veri temizliği</span><b>→</b><span>İki bileşenli GMM</span><b>→</b><span>Adaptif kernel</span><b>→</b><span>Monte Carlo</span><b>→</b><span>Hat + stok</span><b>→</b><span>Doğrusal tahsis optimizasyonu</span></div>
+      <div class="method-accordion">
+        <details><summary>Zaman etüdü ve hat simülasyonu <span>Demo darboğaz: tartım</span></summary><div class="method-body"><p>Besleme ve kutuya dizim 100 balık; tartım, buzlama ve istifleme bir kutu üzerinden modellenir. Aşağıdaki süreler yalnızca tanıtım sürümünde kullanılan sentetik değerlerdir.</p><div class="mini-metrics"><span>Besleme <b>51,20 sn / 100 balık</b></span><span>Dizim <b>58,40 sn / 100 balık</b></span><span>Tartım <b>16,80 sn / kutu</b></span><span>Buzlama <b>10,40 sn / kutu</b></span><span>İstifleme <b>14,20 sn / kutu</b></span></div></div></details>
+        <details><summary>İki bileşenli GMM <span>Örnek çift tepeli yapı</span></summary><div class="method-body"><p>GMM (Gaussian Karışım Modeli), balık ağırlıklarının tek bir homojen gruptan değil farklı büyüme özelliklerine sahip iki gizli gruptan oluşmasını temsil eder. Tanıtım sürümünde yöntem sentetik dağılım parametreleriyle gösterilir.</p></div></details>
+        <details><summary>Adaptif kernel ve çapraz doğrulama <span>K = 5</span></summary><div class="method-body"><p>Kernel, hedef gramaja en yakın geçmiş gözlemleri daha yüksek ağırlıkla kullanır. GroupKFold, aynı döneme ait kayıtların eğitim ve test arasında karışmasını önler. Bu tanıtım sürümünde model davranışı sentetik parametrelerle örneklenir.</p></div></details>
+        <details><summary>Monte Carlo ve risk sınıfları <span>1.000 risk koşusu</span></summary><div class="method-body"><p>Üretim, ürün karması ve kalibre bileşimi her koşuda yeniden örneklenir. Tam karşılanma olasılığı %95 ve üzerindeyse düşük; %80–94,99 orta; %50–79,99 yüksek; %50 altı çok yüksek risk olarak sınıflandırılır.</p></div></details>
+        <details><summary>Korumalı min-maliyetli akış optimizasyonu <span>Risk eşiğine bağlı doğrusal tahsis</span></summary><div class="method-body"><p>Stok partileri ile günlük ürün–kalibre kapasiteleri kaynak, sipariş kalemleri ise talep düğümü olarak modellenir. Varsayılan %95 düşük risk hedefinde plan medyan kapasiteye göre değil, üretimin alt %5'lik sınırını temsil eden korumalı kapasiteye göre kurulur. Model öncelik ağırlıklı karşılama oranını en yüksek düzeye çıkarırken doğrudan kalibreyi, normal kapasiteyi ve uygun teslim tarihini tercih eder. Alternatif kalibre, tarih erteleme ve ilave kapasite yalnızca gerekli olduğunda kullanılır. Kısmi teslimat sürekli miktarlarla mümkün olduğu için bu aşama ikili değişken gerektirmeyen doğrusal min-maliyetli akış problemi olarak çözülür; bulunan sabit plan ayrıca 1.000 Monte Carlo koşusunda sınanır.</p></div></details>
+      </div>
+    </section>
+  </main>
+
+  <footer><p>Karar destek sonuçları planlama amacı taşır; kullanıcı girdileri ve tanımlı varsayımlarla birlikte yorumlanmalıdır.</p></footer>
+
+  <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+  <aside id="drawer" class="drawer" aria-hidden="true" aria-labelledby="drawer-title">
+    <div class="drawer-header"><div><p class="eyebrow" id="drawer-eyebrow">BİLGİ</p><h2 id="drawer-title">Açıklama</h2></div><button id="close-drawer" type="button" aria-label="Bilgi panelini kapat">×</button></div>
+    <div id="drawer-content" class="drawer-content"></div>
+  </aside>
+
+  <template id="order-template">
+    <tr class="order-line">
+      <td><input class="order-id" value="DEMO-001" aria-label="Sipariş numarası"><input class="line-id compact-input" value="1" aria-label="Kalem numarası"></td>
+      <td><input class="customer" value="Demo Müşterisi" aria-label="Müşteri"><select class="market" aria-label="Pazar"><option>İhracat</option><option>İç piyasa</option></select></td>
+      <td><select class="product" aria-label="Ürün"><option value="LEVREK">Levrek</option><option value="CIPURA">Çipura</option></select><select class="product-form" aria-label="Ürün biçimi"><option value="WHOLE">Bütün balık</option><option value="CLEANED">Temizlenmiş / D&amp;G</option><option value="PBI">Fileto PBI</option><option value="PBO">Fileto PBO</option></select><select class="calibre" aria-label="Kapasitede kullanılacak bütün balık kalibresi"></select><small class="conversion-hint">Kapasite ihtiyacı: sipariş miktarıyla aynı</small></td>
+      <td><label>Sipariş miktarı (kg)<input class="demand" type="number" min="1" step="1" value="8500" aria-label="Sipariş miktarı kg"></label><label>Birim fiyat<input class="unit-price" type="number" min="0" step="0.01" value="240" aria-label="Birim fiyat"></label><label>Para birimi<select class="currency" aria-label="Para birimi"><option>TRY</option><option>EUR</option><option>USD</option></select></label></td>
+      <td><label>Planlanan tarih<input class="planned-date" type="date"></label><label>Teslim tarihi esnek mi?<select class="delivery-flex" aria-label="Teslim tarihi esnekliği"><option value="NO">Hayır</option><option value="YES">Evet</option></select></label><label>En geç tarih<input class="latest-date" type="date" disabled></label></td>
+      <td><select class="priority" aria-label="Öncelik"><option value="3">Kritik</option><option value="2">Yüksek</option><option value="1" selected>Normal</option></select></td>
+      <td><select class="alt-allowed" aria-label="Alternatif kalibre"><option value="NO">Hayır</option><option value="YES">Evet</option></select><select class="alt-calibre" aria-label="Kabul edilen alternatif" disabled><option value="">Alternatif yok</option></select></td>
+      <td><input class="line-note" placeholder="İsteğe bağlı" aria-label="Kalem notu"></td>
+      <td><button class="remove-row" type="button" aria-label="Kalemi sil">×</button></td>
+    </tr>
+  </template>
+
+  <template id="stock-template">
+    <tr class="stock-line">
+      <td><input class="lot-id" value="DEMO-LOT-001" aria-label="Parti numarası"><select class="facility" aria-label="Tesis"><option>Tesis A</option><option>Tesis B</option></select></td>
+      <td><select class="stock-product" aria-label="Ürün"><option value="LEVREK">Levrek</option><option value="CIPURA">Çipura</option></select><select class="stock-calibre" aria-label="Kalibre"></select></td>
+      <td><input class="stock-kg" type="number" min="0" step="1" value="0" aria-label="Stok miktarı kg"></td>
+      <td><input class="stock-date" type="date" aria-label="Üretim veya giriş tarihi"></td>
+      <td><select class="stock-status" aria-label="Stok durumu"><option value="FREE">Serbest</option><option value="RESERVED">Müşteriye ayrılmış</option></select></td>
+      <td><input class="reserved-for" placeholder="Müşteri / sipariş" aria-label="Ayrıldığı müşteri veya sipariş" disabled></td>
+      <td><button class="remove-row" type="button" aria-label="Stok satırını sil">×</button></td>
+    </tr>
+  </template>
+
+  <template id="capacity-template">
+    <tr class="capacity-line"><td><input class="capacity-date" type="date" aria-label="Üretim tarihi"></td><td><select class="capacity-product"><option value="LEVREK">Levrek</option><option value="CIPURA">Çipura</option></select><select class="capacity-calibre" aria-label="Kalibre"></select></td><td><input class="capacity-kg" type="number" min="0" step="1" value="0"></td><td><input class="available-lines" type="number" min="0" max="2" value="2"></td><td><input class="available-shifts" type="number" min="0" max="2" value="2"></td><td><input class="downtime" type="number" min="0" value="0"></td><td><button class="remove-row" type="button" aria-label="Üretim satırını sil">×</button></td></tr>
+  </template>
+
+  <script src="vendor/xlsx.full.min.js"></script>
+  <script src="model-engine.js"></script>
+  <script src="optimization-engine.js"></script>
+  <script src="app.js"></script>
+  <script src="data-io.js"></script>
+</body>
+</html>
